@@ -29,7 +29,7 @@ function Patch-AssemblyInfo($file, $version, $buildNumber)
 
 function Get-VersionFromTag()
 {
-	$versionTag = git describe --exact-match --tags --abbrev=0
+	$versionTag = git describe --tags --abbrev=0 #--exact-match
 	if(-not ($versionTag -match "^v\d+\.\d+\.\d+$"))
 	{
 		throw "Missing or invalid version tag"
