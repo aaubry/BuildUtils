@@ -1,5 +1,5 @@
 
-function Patch-Xml($file, $version, $buildNumber, $xpath, $namespaces)
+function Patch-Xml($file, $value, $xpath, $namespaces)
 {
 	Write-Host "Patching $file"
 
@@ -8,12 +8,12 @@ function Patch-Xml($file, $version, $buildNumber, $xpath, $namespaces)
 	$ns = New-Object System.Xml.XmlNamespaceManager -ArgumentList (New-Object System.Xml.NameTable)
 	$namespaces.GetEnumerator() | % { $ns.AddNamespace($_.Key, $_.Value) }
 	$node = $doc.SelectSingleNode($xpath, $ns)
-	$node.Value = "$version.$buildNumber"
+	$node.Value = $value
 
 	Set-Content $file $doc.OuterXml
 }
 
-function Patch-AssemblyInfo($file, $version, $buildNumber)
+function Patch-AssemblyInfo($file, $version)
 {
 	Write-Host "Patching $file"
 
