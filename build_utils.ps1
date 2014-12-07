@@ -39,3 +39,15 @@ function Get-VersionFromTag()
 	Write-Host "Current version is $version"
 	echo $version
 }
+
+function Validate-FileHeaders()
+{
+  Get-ChildItem -Recurse "*.cs" |
+    ? { -not ($_.FullName -match "\\obj\\") } |
+    % {
+      $firstLine = Get-Content $_ -TotalCount 1
+      if(-not ($firstLine -match "//\s*This file is part of YamlDotNet")) {
+        Write-Warning "File $($_.FullName) does not start with the license header"
+      }
+    }
+}
