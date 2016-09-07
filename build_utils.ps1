@@ -27,15 +27,20 @@ function Patch-AssemblyInfo($file, $version)
 	Set-Content $file $code
 }
 
-function Get-VersionFromTag()
+function Get-VersionFromTag($preReleaseNumber = $null)
 {
 	$versionTag = git describe --tags --abbrev=0 #--exact-match
-	if(-not ($versionTag -match "^v\d+\.\d+\.\d+$"))
+	if(-not ($versionTag -match "^v(\d+\.\d+\.)(\d+)$"))
 	{
 		throw "Missing or invalid version tag"
 	}
 
-	$version = $versionTag.TrimStart("v")
+	if ($preReleaseNumber -eq $null) {
+		$version = "$($Matches[1])$($Matches[2])"
+	} else {
+		$version = "$($Matches[1])$([int]$Matches[2] + 1)-pre$($preReleaseNumber)"
+	}
+
 	Write-Host "Current version is $version"
 	echo $version
 }
